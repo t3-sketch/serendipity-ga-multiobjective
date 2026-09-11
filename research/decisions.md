@@ -2,7 +2,9 @@
 
 判断が変わった場合、過去の記録を消さず、新しい項目として追記する。
 過去のStep名、文書名、順序は当時の記録である。
-現在の文書配置と進行条件は末尾の2026-09-10文書再編判断と[Macro](../ROADMAP.md)を参照する。
+現在の採用判断は[2026-09-12の1M canonical化](#canonical-1m)と[Macro](../ROADMAP.md)を参照する。
+過去の「100Kを保持」「canonical未採用」「version未確定」と削除済み文書名は、現在の運用指示ではない。
+100K結果の記録は[移行前のGit履歴](https://github.com/t3-sketch/serendipity-ga-multiobjective/tree/067d4641aa4ccb7ffae353db9ae31b026d7e837d/v0)で参照できる。
 
 ## 2026-09-09：共有研究文書とversion固有成果物を分離する
 
@@ -233,3 +235,31 @@ RUNBOOKは最新1Mへの案内を先頭へ追加し、既存コマンドが100K�
 
 **検証（2026-09-11 End-of-Day）**：既存`check.py`を保存済みPhase 1成果物へ再実行し、内部整合性と、本比較からPhase 1へのcandidate score、全推薦ID・順序、既存全指標の回帰一致を確認した。
 学習と実験は再実行していない。K=15〜30、学習seed間の頑健性、外部リンクの公開アクセスは未検証である。
+
+<a id="canonical-1m"></a>
+
+## 2026-09-12：MovieLens 1Mをv0の正式baselineへ一本化する
+
+**課題**：公開repoの入口と結果reportが100K中心で、現在の1M研究結果が補足記録に留まり、研究正本が混在していた。
+
+**仮説**：v0の条件と結果を1Mの単一reportに集約すれば、初見でも研究の現在地と根拠を辿れる。
+
+**根拠**：ユーザーが1Mをcanonical baselineとして採用し、100KはGit historyに残せばよいと明示した。
+1M本比較とPhase 1診断の保存出力を参照でき、指定されたNDCGとgenre distanceは両runの集計と一致した。
+
+**判断**：v0 = MovieLens 1M canonical baselineとする。
+positiveは推薦時点までの履歴平均超え、目的はmean rとmean d、K=10、候補100とし、r×dは診断専用に保つ。
+旧100Kの結果reportと案内は現行mainから削除し、Git historyに保持する。
+これは文書上の正式採用であり、100Kの旧Stepを1Mの実行完了として読み替えるものではない。
+
+**結果**：[1M正式baseline報告](../v0/reports/S01-ml-1m-baseline.md)を作成し、入口、Macro、Micro、背景、仮説、RUNBOOKの参照を統一した。
+コード、config、Notebook、データ、保存出力は変更せず、学習と新規実験も実行していない。
+proxy改善をexperienced serendipity改善と呼ばず、M1〜M5、measurement gap、human validation前のLLMはprototypeというnarrativeを維持した。
+
+**検証（2026-09-12）**：両runのconfig、完了マーカー、test集計、診断runのsplit、checkpoint、bootstrapを照合した。
+ローカルリンク、Markdownの囲み、指定6指標、削除したreportへの現行リンクがないことを確認した。
+コード、config、Notebookを含むMarkdown以外のtrackedファイルは変更していない。
+当時の回帰検査と実験は再実行していない。
+
+**未完**：当時の事前仕様と判断記録の照合、コードと環境を復元した再現確認。
+canonical採用は完了したが、M1全体の完了とhuman validityは未達である。

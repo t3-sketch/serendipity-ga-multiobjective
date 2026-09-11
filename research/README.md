@@ -5,15 +5,15 @@
 | 読みたいこと | 保存先 |
 |---|---|
 | 研究日記の入口と短い考察 | [ルートREADME](../README.md) |
-| 動機から結果までを辿る研究記事 | [v0 README](../v0/README.md) |
+| v0の正式baseline概要 | [v0 README](../v0/README.md) |
 | 研究全体の問い、依存関係、現在地 | [ルートROADMAP](../ROADMAP.md)：Macro `M1`〜`M5` |
 | 各versionの問い、短い結果、完了条件 | [v0 ROADMAP](../v0/ROADMAP.md)：Micro `v0-S1`など |
 | 背景、概念、採用前提 | [research_state.md](research_state.md) |
 | 採用した判断と理由の履歴 | [decisions.md](decisions.md) |
 | 文献と未検証仮説 | [literature.md](literature.md)、[hypotheses.md](hypotheses.md) |
 | 実験前の計画 | version内の`plans/`。[記入項目](../v0/plans/README.md) |
-| 実験後の報告と検証証拠 | version内の`reports/`。[既存報告](../v0/reports/S01-main.md) |
-| コマンドと環境 | [v0 RUNBOOK](../v0/RUNBOOK.md) |
+| 実験後の報告と検証証拠 | version内の`reports/`。[1M正式報告](../v0/reports/S01-ml-1m-baseline.md) |
+| 保存結果の確認と再現上の制約 | [v0 RUNBOOK](../v0/RUNBOOK.md) |
 | AIが守る規則と読み先 | [AGENTS.md](../AGENTS.md) |
 | 長い相談の経緯 | `discussions/`（ローカル専用） |
 
@@ -25,7 +25,7 @@ Macroとversionは一対一ではない。
 ## 研究日記の残し方
 
 ルートREADMEは研究日記の入口とし、現在の関心と日付付きの短い考察を置く。
-versionごとのREADMEには、その実験を始めた理由、選んだ方法、結果を見て考え直したことを文章で残す。
+versionごとのREADMEには、正式条件、結果、証拠への導線を置く。
 
 日付付き日記の書式は[journal-template.md](journal-template.md)を正本とする。
 LLMは日記を書くたびにこのファイルを読み、6つの見出しと順序を保つ（[AGENTS.md](../AGENTS.md)にも指定）。
@@ -95,17 +95,18 @@ sasrec-serendipity/
 ├── AGENTS.md                 AIの規則と読み先
 ├── research/                 背景、文献、仮説、判断、相談履歴
 └── v0/
-    ├── README.md             動機から結果までを辿る研究記事
-    ├── ROADMAP.md            Micro v0-S1〜S3
-    ├── RUNBOOK.md            実行手順
+    ├── README.md             1M正式baselineの概要
+    ├── ROADMAP.md            Micro v0-S1（1M）
+    ├── RUNBOOK.md            保存結果の確認と再現上の制約
     ├── plans/                計画の入口。新規計画は必要時に作成
-    ├── reports/              各Stepの結果と検証証拠
-    └── 既存コードとoutputs/  実験成果物を保持
+    ├── reports/              1M正式baselineと検証証拠
+    └── 既存コード           100K用の実装を保持。1M出力は別保存
 ```
 
 旧`research/steps.md`はMacroへ、旧`v0/README.md`の実行説明はRUNBOOKへ再編した。
-旧`RESULTS.md`と`LENGTH_RESULTS.md`はreportsへ移し、旧パスには参照用の案内だけを残した。
-旧`RESEARCH.md`の詳しい解釈も[baseline概要記録](../v0/reports/baseline-overview.md)に保持した。
+2026-09-12にv0の正式baselineをMovieLens 1Mへ統一した。
+100K中心のRESULTS、LENGTH_RESULTS、旧Step報告、baseline概要、RESEARCH案内は現行mainから削除し、Git historyに保持する。
+[1M正式report](../v0/reports/S01-ml-1m-baseline.md)を結果の正本とし、数値はここで管理する。
 古い対談、判断ログ、NotebookLMへの登録記録は当時の履歴として読む。
 ローカルreportは作業用の最新報告とし、Notionの既存報告は当時の公開用記録として参照する。自動同期はしない。
 

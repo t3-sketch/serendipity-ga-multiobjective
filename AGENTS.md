@@ -20,12 +20,16 @@
 
 ## 研究上の制約
 
-v0はSASRec候補生成とNSGA-II再ランキングを接続した探索的integration baselineである。
+v0はMovieLens 1Mのcanonical baselineであり、SASRec候補生成とNSGA-II再ランキングを接続した探索的integration baselineである。
+結果の正本は`v0/reports/S01-ml-1m-baseline.md`とする。
 FAS-MOEAの再現、指標の妥当性検証、experienced serendipityの改善実証として扱わない。
-現行v0コードと旧保存結果はpositive定義と目的軸が異なるため、対象runの条件を先に確認する。
+正式条件は履歴平均超えpositive、目的(mean r, mean d)、K=10、候補100。r×dは診断専用とする。
+公開コードとconfigは100K用の既存実装であり、1M結果の再現コードとは扱わない。
+100Kの結果文書はGit historyで参照し、現行の研究結果として引用しない。
 既存コード、環境、データ、出力を勝手に全面改修または上書きしない。
 新規実験は承認された別設定と別出力先を使う。
-別フォルダの1M実験の保存先は`ROADMAP.md`にある。v1への割り当ては未確定であり、自動移動しない。
+1Mのversion配置はv0に確定した。別保存のコード、データ、出力は自動移動しない。
+保存証拠の確認は`v0/RUNBOOK.md`、ローカル保存場所は公開対象外の`research/local-context.md`を参照する。
 
 Macroは`M1`〜`M5`、Microは`v0-S1`のようにversion付きで呼ぶ。
 主作業は一つに絞るが、依存しない文献調査や設計まで直列化しない。

@@ -1,86 +1,92 @@
 # 音楽の「出会えてよかった」を考える研究日記
 
-知らなかったけれど、出会えてよかったと思える音楽を推薦したい。
-特に、いつもの好みから少し外れた曲に興味を持ち、聴く音楽の幅が広がるような発見に関心がある。
+推薦の代理指標が高いことと、人が「価値ある偶然の発見をした」と感じることは同じだろうか。
+この研究では、推薦システム側の評価と、人間が経験するserendipityの対応を検証する。
 
-このリポジトリは、そのために何を作り、何を測ればよいのかを考えていく研究日記として書きます。
-完成した手法だけでなく、試した理由、実験結果、うまく説明できなかったこと、考えを変えた経緯も残します。
+現在の正式結果は **v0 = MovieLens 1M canonical baseline** である。
+SASRecによる候補生成とNSGA-IIによる再ランキングを接続し、同じ候補上で単純加重和と比較した。
+人間評価による指標の妥当性検証と、LLMによる評価の近似は今後の研究である。
 
-現在の実験結果は、MovieLens 1Mでの本比較とPhase 1診断です（推薦長K=10、候補100件）。
-SASRecによる候補生成に加重和とNSGA-IIによる推薦集合の選択を接続し、同じ候補から選ぶ方法を比較しました。
-初期の100K実験は過去の記録として残しています。
-計算上の代理指標は上がりましたが、それを「価値ある発見が増えた」とは解釈できませんでした。
+## MovieLens 1Mで分かったこと
 
-現在は、Taste-Broadening Serendipityを何として捉え、どう測るかを考えています。
-SASRecやNSGA-IIを今後も使うかは、その問いに合わせて判断します。
+履歴平均超えをpositiveとし、同じ100候補からK=10件を選ぶ条件で比較した。
+Weighted SumとNSGA-IIはSASRecよりmean genre distanceが高い一方、NDCG@10が低かった。
+NSGA-IIとWeighted SumのNDCG差の95%区間は0を跨ぎ、推薦品質上の優位性は確認できない。
+
+これはsystem-side proxyと推薦品質のtrade-offの記録である。
+FAS-MOEAの再現や、人間が経験するserendipityの改善を示した結果ではない。
+条件、数値、証拠と検証範囲は[v0の正式baseline報告](v0/reports/S01-ml-1m-baseline.md)にまとめている。
+
+## 研究の見取り図
+
+| 研究テーマ | 現時点の到達点 |
+|---|---|
+| システム側の指標と推薦品質の関係 | 1M本比較と診断を完了し、v0として正式採用。事前の評価設計との照合は未完 |
+| 代理指標と人間評価の対応 | 未完 |
+| LLMによる人間評価の近似 | 未完 |
+| Fortuitous / Refreshing / Enrichingの集約 | 未完 |
+| 検証済みの近似評価を使う推薦 | 未完 |
+
+研究全体の問いと依存関係は[Macroロードマップ](ROADMAP.md)、各実験の問いと結果は[v0のMicroロードマップ](v0/ROADMAP.md)を参照する。
 
 ## 研究の記録
 
-### 2026-09-11
+### 2026-09-12
 
 #### 今日やったこと
 
-1Mの本比較とPhase 1の保存結果を振り返り、READMEと研究文書を最新結果に合わせて整理した。
-研究日記の書式も統一した。
+MovieLens 1Mの既知結果と保存済み成果物を照合し、v0の正式baselineを1Mへ一本化した。
+100K中心の結果文書は現行mainから外し、Git historyへ残した。
 
 #### 仮説
 
-当初は、SASRecの候補生成とNSGA-IIを接続することで、関連度とserendipity-orientedな目的のtrade-offを探索できると考えた。
-今日はその仮説を保存結果から振り返った。
+新しい仮説なし。
+今回の作業は、採用済み結果と研究文書の不一致を解消する文書整理である。
 
 #### 実験
 
-新規実験なし。以下の1M比較（K=10）とPhase 1の保存結果を確認した。
-
-- SASRec
-- SASRec + Weighted Sum
-- SASRec + NSGA-II
+新規実験なし。
+1M本比較とPhase 1診断の保存済み設定、完了状態、集計結果を確認した。
 
 Metrics:
 
-- 保存済みのNDCG@10、Recall@10、Candidate Recall@100、平均ジャンル距離、heldout distanceなどを照合。
-- 推薦の完全一致率と採用解の由来を保存CSVから再集計。
-- 既存`check.py`を再実行し、Phase 1の内部整合性と、本比較からPhase 1への候補・推薦・既存指標の回帰一致を確認。
+- [正式baseline報告](v0/reports/S01-ml-1m-baseline.md)に記録したNDCG@10とmean genre distanceを保存CSVと照合した。
 
 #### 分かったこと
 
-1Mでも、ジャンル距離が増えた一方で、将来のpositiveを推薦する性能は下がった。
-NSGA-IIの最終推薦は単純な加重和と98.56%一致し、NDCGの優位性は確認できなかった。
-根拠と解釈は[v0から1M再実験までの研究記事](v0/README.md)と[1Mの保存記録](ROADMAP.md#external-1m)に残した。
+1Mではgenre distanceが高い再ランキング結果ほどNDCG@10が低く、NSGA-IIのWeighted Sumに対するNDCG上の優位性も確認できない。
+この結果はsystem-sideのtrade-offであり、experienced serendipityの改善を示さない。
 
 #### 問題
 
-ジャンル距離が増えたことを「よい発見が増えた」とは解釈できない。
-普段聴かない曲への興味と、その後に聴く音楽の幅が広がることを、どう区別して測るかが残っている。
+公開コードは100K用であり、1M実験のコードと出力は別保存である。
+当時の事前仕様との対応と、コードと環境を復元した再現確認は未完である。
 
 #### Next
 
-Taste-Broadening Serendipityの定義と測定を整理する。
-v0は探索的な実験として残し、SASRecやNSGA-IIを今後も使うかは評価したいものに合わせて判断する。
+M1の事前判断記録と1M実験条件を照合する。
+追加実験は、その照合後に必要性を判断する。
 
-## このリポジトリの読み方
+## 実装と資料
 
-- 考えた経緯を読む：[v0の研究記事](v0/README.md)
-- 研究全体の現在地を確認する：[Macroロードマップ](ROADMAP.md)
-- 最新の1M結果を確かめる：[1Mの保存記録](ROADMAP.md#external-1m)
-- 初期100Kの証拠を読む：[初回実験](v0/reports/S01-main.md)、[推薦リスト長の比較](v0/reports/S02-list-length.md)、[Microロードマップ](v0/ROADMAP.md)
-- 保存済みコードを理解する：[v0の実行手順](v0/RUNBOOK.md)
-- 背景を読む：[研究背景](research/research_state.md)、[先行研究](research/literature.md)、[記録の運用](research/README.md)
+SASRecの学習にはRecBole、再ランキングにはpymooのNSGA-IIを使用する。
+学習済みモデルの後段で推薦集合を選ぶ構成であり、SASRec自体をNSGA-IIで学習する方式ではない。
 
-日記には、その時点の考えや未確定の仮説も含まれます。
-採用した判断は[判断ログ](research/decisions.md)に、実験で確認した事実は各報告に分けて記録します。
-1Mの成果物は別保存で、version割り当ては未確定です。
-このリポジトリの現行100Kコード、旧100K結果、1M結果を同じ実行条件として読み替えないでください。
+- [結果の確認手順](v0/RUNBOOK.md)：保存済み1M結果の確認方法と公開コードの制約
+- [研究背景](research/research_state.md)と[先行研究](research/literature.md)：概念、主張の範囲、関連文献
+- [研究の進め方](research/README.md)：計画、報告、相談からの引き継ぎ
 
-## 公開するものとデータの出典
+公開コードとconfigは100K用の既存実装を保持し、1M版のコードと出力は別保存である。
+このrepoだけで1M正式結果を再現できる状態ではない。
+100Kの結果文書は現行mainの研究正本から外し、Git historyに残す。
 
 この公開リポジトリにはコード、研究文書、集計結果の報告を収録する。
 データ、checkpoint、ユーザー単位の出力、相談履歴は含めない。
-報告内の`outputs/`と`data/`への参照は、ローカルに保存した証拠の位置を示すため、GitHub上では開けない。
+報告内のrun IDと証拠ファイル名は別保存の記録を識別するもので、GitHubに出力を同梱したことを意味しない。
 
 MovieLensはGroupLens Research Projectのデータを使用する。
 出典：F. Maxwell Harper and Joseph A. Konstan (2015), *The MovieLens Datasets: History and Context*, [DOI](https://doi.org/10.1145/2827872)。
-既存100Kの[データ利用条件](v0/DATA_LICENSE.md)も参照し、データ、checkpoint、ユーザー単位の出力をこのREADMEと一緒に無条件で再配布しない。
+公開時は[データ利用条件](v0/DATA_LICENSE.md)を確認し、データ、checkpoint、ユーザー単位の出力をこのREADMEと一緒に無条件で再配布しない。
 
 ## 参考文献
 

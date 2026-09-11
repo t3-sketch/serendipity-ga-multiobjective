@@ -1,6 +1,6 @@
 # 仮説とResearch Questions
 
-最終更新：2026-09-10
+最終更新：2026-09-11
 
 仮説は採用済みの結論ではない。
 各項目について、測定対象、比較条件、反証可能な結果を実験前に固定する。
@@ -74,14 +74,12 @@ LLM evaluator prototypeだけを根拠にoptimizationへ進まない。
 
 **H5**：NSGA-IIは複数の非劣解を生成できるが、item-additiveな目的と現在の代表解規則では、単純加重和を上回る運用点を作らない可能性がある。
 
-**既存結果**：旧設定ではNSGA-II代表解と加重和代表解が全件一致した。
-proxyは上昇したがNDCGとheld-out高評価を伴う距離は低下した。
+**既存結果**：MovieLens 1M、履歴平均positive、(mean relevance, mean genre distance)、K=10をv0 canonical baselineとして採用した。
+[正式report](../v0/reports/S01-ml-1m-baseline.md)の保存集計では、NSGA-IIはSASRecよりmean genre distanceが高い一方、NDCGとheldout distanceは低い。
+NSGA-IIと加重和のNDCG差の95%区間は0を跨ぎ、優位性は確認できない。
+この結果はproxy向上がexperienced serendipity改善を意味する証拠ではない。
 
-**追加の既存結果（2026-09-10確認）**：別作業フォルダでMovieLens 1M、履歴平均positive、`(relevance, genre_distance)`、K=10の本比較が完了している。
-保存場所と指標は[Macroの1M記録](../ROADMAP.md#external-1m)を参照する。
-1Mの保存済みtest集計でも、NSGA-IIはSASRecより平均genre distanceが高い一方、NDCGとheldout distanceは低い。
-旧100Kとデータ・positive・目的が異なるため、設定変更単独の効果とは解釈しない。
+**次の評価**：実施済み1M実験とMacro M1の事前仕様と判断記録を照合する。
+canonical採用は事後の整理であり、当時のprimary outcomeや代表解規則の事前固定を証明しない。
 
-**次の評価**：実施済み1M実験とMacro M1の評価設計を照合し、採用条件と未検証事項を整理する。
-
-**状態**：旧100Kと別作業フォルダの1Mで部分的に検証済み。Macro M1の完了およびcanonical設定の採用は未確認。
+**状態**：1Mで部分的に検証済み。v0へのcanonical採用は完了、Macro M1の完了は未達。
