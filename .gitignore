@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+data/
+outputs/
+log/
+log_tensorboard/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pth
+*.pt
+*.ckpt
+
+# Local discussion history and service-specific identifiers
+research/local-context.md
+research/discussions/
+v0/CHATGPT_CONTEXT_PROMPT.md
+v0/NOTEBOOKLM.md
+v0/NOTEBOOKLM_AUDIO_PROMPT.md

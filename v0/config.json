@@ -1,0 +1,17 @@
+{
+  "data_dir": "data/ml-100k",
+  "output_dir": "outputs/full",
+  "seed": 42,
+  "search_seeds": [42, 43, 44],
+  "top_k": 10,
+  "model_selection_k": 10,
+  "candidate_pool": 100,
+  "population": 40,
+  "generations": 50,
+  "relevance_floor": 0.95,
+  "epochs": 100,
+  "patience": 5,
+  "train_batch_size": 256,
+  "threads": 2,
+  "bootstrap_samples": 2000
+}
