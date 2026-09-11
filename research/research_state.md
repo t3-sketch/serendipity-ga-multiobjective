@@ -1,11 +1,41 @@
 # 研究背景と採用前提
 
-最終更新：2026-09-10
+最終更新：2026-09-11
 
 2026-09-10に相談チャットと既存の対談記録を照合した。
 相談元の識別子はローカル専用の`local-context.md`に保持する。
 2026-09-10の文書再編で、進捗を[Macro](../ROADMAP.md)と[Micro](../v0/ROADMAP.md)へ分離した。
 この文書は背景、概念、現在採用している研究上の前提を保持する。
+
+## 最初に確認する現在の実験参照先（2026-09-11訂正）
+
+ユーザーは旧100K実験の後、MovieLens 1Mで本実験をやり直し、同条件のPhase 1診断も完了している。
+今後「今回の結果」「最新の結果」やREADMEの考察を扱うときは、**1Mの本比較とPhase 1診断を先に参照する**。
+100Kだけを現在の到達点として説明しない。
+経緯は「旧100Kの接続実験 → 1Mの現行(r,d)本比較 → 同条件のPhase 1追跡」である。
+直前のREADME文章案は100K中心で、この進展を十分反映していなかったため、未適用の旧案として扱う。
+その後、同日のユーザー承認に基づき、100Kから1MとPhase 1までを扱う研究記事としてREADMEを改稿した。
+
+- 本比較：`ml-1m-rd-k10-resumed2`。診断：`ml-1m-rd-k10-phase1`。保存場所はローカル専用の`local-context.md`を参照する。
+- 条件：MovieLens 1M、履歴平均超えpositive、目的は平均`r`と平均`d`。`r×d`は診断値のみ。K=10、候補100、floor 0.95、40個体、50世代、探索seed 42/43/44。
+- selected epoch 1、validation NDCG@10=0.075590。評価対象はvalidation 478人、test 974人。
+- Test Candidate Recall@100=0.192242（ユーザーごとのRecallの平均）。旧100Kの0.355381を1M結果として使わない。
+- Test NDCG@10はSASRec 0.095103、Weighted Sum 0.050995、NSGA-II 0.051279。距離上昇とheld-out品質低下を観測した。
+- NSGA-IIとWeighted Sumの推薦ID・順序は2,880/2,922 user×seedで完全一致（98.56%）。旧100Kの「全件一致」を1Mへ引き継がない。
+- NSGA-II−Weighted SumのNDCG差は+0.000284、95% bootstrap区間は[-0.000067, +0.000919]。優位性は確認できず、同等性が証明されたとも扱わない。
+- Phase 1の採用解はweighted_sum由来2,874、sasrec由来6、探索中初出42。generation 0由来の98.56%と加重和との推薦一致率は、数値が同じでも別の診断である。
+
+公開用の確認記録：[Macroの1M記録](../ROADMAP.md#external-1m)。ローカル成果物の位置は非公開の`local-context.md`に保持する。
+2026-09-11に保存済みconfig、completion、split、checkpoint、test集計とbootstrapを照合し、推薦CSVから一致件数、由来CSVから採用解の内訳を再集計した。
+同日のEnd-of-Day確認では既存`check.py`も再実行し、Phase 1成果物の内部整合性と、本比較からPhase 1へのcandidate score、全推薦ID・順序、既存全指標の回帰一致を確認した。
+学習と実験は再実行しておらず、K=15〜30、学習seed間の頑健性、外部リンクの公開アクセスは未検証である。
+Notionにはpositiveを「train履歴平均超え」とする記述があるが、1M保存先コードのtest入力はtrain＋validation履歴である。
+実装に即して「推薦時点までの履歴平均超え（validationはtrain、testはtrain＋validation）」と記憶し、Notion本文は未訂正とする。
+
+これは説明時の参照優先順位の訂正であり、canonical評価設計の採用、M1の完了、1Mのversion割り当てを意味しない。
+旧100KのK=10〜30比較と、今回確認した1MのK=10比較は別の証拠である。
+このメモリ訂正時点ではREADME本文の改稿は行わず、その後の承認を受けて文書のみ更新した。
+成果物の移動、新規実験、Notionへの書き込みは行っていない。
 
 ## 研究のnarrative
 
@@ -31,16 +61,22 @@ sequential multi-objective recommenderが最適化するsystem-side proxyと、h
 ## 文書と研究対象の区別
 
 背景はこの文書、進捗は[Macro](../ROADMAP.md)、version内の実験は[Micro](../v0/ROADMAP.md)、採用判断の経緯は[decisions.md](decisions.md)に置く。
-人間向けの入口はREADME、AIへの規則はAGENTS、実行手順はRUNBOOKとする。
+ルートREADMEは研究日記の入口と日付付きの短い考察、versionのREADMEは動機から結果までを辿る研究記事とする。
+日記の未確定な考えと採用判断を分け、記録の運用は[research README](README.md)に従う。
+2026-09-11のv0記事は別保存の1MとPhase 1も経緯として扱うが、成果物のversion割り当ては変更しない。
+現在の関心はTaste-Broadening Serendipityの定義と測定にあり、今後のSASRecやNSGA-IIの採用は固定しない。
+この関心の記録を、新規実験やMacro完了判定の承認とは扱わない。
+AIへの規則はAGENTS、実行手順はRUNBOOKとする。
 空のversionは作らず、目的と評価設計を決めてから追加する。
 このフォルダと同名のChatGPT Projectや、別のCodex作業フォルダを自動同期済みとは扱わない。
 
-## Baseline v0の範囲
+## 最新1M実験と初期baselineの範囲
 
-v0は、MovieLens 100Kを用いてSASRecとNSGA-IIを接続した探索的なintegration baselineである。
+現在参照する本比較はMovieLens 1Mで、SASRec候補生成と加重和／NSGA-IIを接続した探索的なintegration baselineである。
+初期の100Kコードと結果はv0フォルダに保持し、1Mのコードと成果物は別保存に保持する。
 
 ```text
-MovieLens 100K
+MovieLens 1M（最新本比較。初期接続実験は100K）
     ↓ 全体時刻によるtrain / validation / test分割
 RecBole SASRec
     ↓ 未視聴アイテムのうち上位100候補
@@ -74,7 +110,7 @@ serendipity constructと指標の妥当性も詰めていない。
 その状態と未完事項は[v0-S3](../v0/reports/S03-definition-smoke.md)に置く。
 旧結果を置き換えるcanonical baselineとしては未採用であり、M1で採否を決める。
 
-別フォルダの1M実験も存在する。
+最新の本比較とPhase 1診断は、別フォルダの1M実験で完了している。
 保存先と確認した条件は[Macroの1M記録](../ROADMAP.md#external-1m)を参照する。
 1Mはv1と同義ではなく、配置とversion割り当ては未確定である。
 データ、positive、目的が同時に異なる旧100Kとの比較から、一つの変更の因果効果を主張しない。

@@ -1,6 +1,6 @@
 # 研究全体のMacroロードマップ
 
-最終更新：2026-09-10
+最終更新：2026-09-11
 
 研究テーマを`M1`〜`M5`、各versionの実験を`v0-S1`のように区別する。
 旧文書のStep 1〜5はM1〜M5に対応する。
@@ -11,7 +11,7 @@
 
 | ID | Research Question | 状態と簡潔な結果 | 研究記録 |
 |---|---|---|---|
-| M1 | sequential backbone上で、proxy最適化はどんな推薦品質のトレードオフを作るか | 部分完了。旧100Kと別保存1Mで距離／proxy上昇とheld-out品質低下を観測。採用設計との照合は未完 | [v0 Micro](v0/ROADMAP.md)、[1M保存記録](#external-1m)、[仮説RQ5](research/hypotheses.md) |
+| M1 | sequential backbone上で、proxy最適化はどんな推薦品質のトレードオフを作るか | 部分完了。最新1Mの本比較とPhase 1は実行完了。距離上昇とheld-out品質低下を観測。採用設計との照合は未完 | [1M保存記録](#external-1m)、[v0 Microと初期100Kの履歴](v0/ROADMAP.md)、[仮説RQ5](research/hypotheses.md) |
 | M2 | offline metricは人間のF/R/Eと総合serendipityに対応するか | 未完。人間評価未取得 | [仮説RQ1](research/hypotheses.md) |
 | M3 | LLMは人間のFortuitous / Refreshing / Enrichingを予測できるか | 未完。human-validated evaluatorなし | [仮説RQ2](research/hypotheses.md) |
 | M4 | F/R/Eをどう集約すると人間の総合判断に適合するか | 未完。集約規則未採用 | [仮説RQ3](research/hypotheses.md) |
@@ -50,6 +50,23 @@ RQ、positive、目的、primary outcome、代表解規則、許容する品質�
 「事前に決定」「事後の解釈」「未確認」を区別する。
 その後にcanonical条件とversion配置をユーザーが判断する。
 追加実験、v1作成、既存出力の移動はまだ承認された作業ではない。
+
+### 現在の研究ハンドオフ（2026-09-11）
+
+- **Macro Stage**：M1は部分完了。1M本比較とPhase 1診断は実行・保存済みだが、M1の評価設計との照合は未完。
+- **Micro Stage**：v0-S1とv0-S2は旧100Kの保存結果として完了。v0-S3は100K smokeの接続確認までで、1M成果物のversion割り当ては未決定。
+- **Current Milestone**：既存1M実験について、RQ、positive、目的、primary outcome、代表解規則、許容accuracy lossが事前決定・事後解釈・未確認のどれかを確定する。
+- **Next Milestone**：照合結果を根拠に、canonical評価条件と1M成果物のversion配置をユーザーが判断する。
+- **Critical Path**：既存記録の照合 → canonical条件とversion配置の判断 → 必要な場合だけ別設定・別出力先の実験計画を承認する。
+- **Major Blocker**：1M条件とM1完了条件を結ぶ、日付付きの採否記録がまだ揃っていない。
+- **Minor Blockers**：1MのK=15〜30、学習seed間の頑健性、外部リンクの公開アクセスは未確認。Notionのpositive説明と保存先コードのtest履歴範囲にも差がある。
+- **Research Debt**：旧100K実験時点のコードsnapshotがなく、保存結果と完全な再現検証を同義にできない。
+
+**Next Actions**：
+
+1. 1Mの計画・設定・結果をM1の完了条件へ対応付ける → 未確認の事前決定と事後解釈を分離し、canonical条件の判断を可能にする。
+2. canonical条件と1Mのversion配置を判断する → 正式なreport配置と、M1で追加実験が必要かの判定を可能にする。
+3. 必要と判断した検証だけを計画化する → K・学習seed・比較条件のどれを追加測定するかを限定し、新規実験の承認へ進める。
 
 <a id="m1"></a>
 
@@ -182,7 +199,9 @@ M1全体の完了を待たず、文献調査とprotocol設計は進められる�
 
 この1M条件でも、ジャンル距離の上昇をheld-out qualityやexperienced serendipityの改善とは扱えない。
 元タスクと1M版READMEには、診断追加前後の候補・推薦・既存指標の回帰検査PASSが記録されている。
-今回の照合では保存済み記録を確認しており、学習・実験・全件回帰検査を再実行していない。
+2026-09-11のEnd-of-Day確認では、保存済みPhase 1成果物に対して既存`check.py`を再実行し、history-only centering、positive-definition checkpoint guard、time leakage、warm catalog、genre distance、目的値とfront、scalarization、repair、seed、held-out metricsを検査した。
+さらに本比較からPhase 1へのcandidate score、全推薦ID・順序、既存全指標の回帰一致を確認した。
+学習と実験は再実行しておらず、外部リンクの公開アクセス、K=15〜30、学習seed間の頑健性は未検証である。
 
 「現行目的の本比較はすべて未実施」という研究全体の説明は更新が必要だったが、旧100Kの結果はそのまま保持する。
 実験名の「Phase 1」は探索追跡の追加段階であり、Macro M1の完了を意味しない。

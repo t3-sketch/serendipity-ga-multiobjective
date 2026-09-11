@@ -1,4 +1,14 @@
-# v0の実行手順
+# 実行対象の選び方と保存済み100Kコードの手順
+
+## 最新結果はMovieLens 1M
+
+現在の結果を読む場合は、[1M本比較とPhase 1の保存記録](../ROADMAP.md#external-1m)を参照する。
+対象runは`ml-1m-rd-k10-resumed2`と`ml-1m-rd-k10-phase1`で、いずれもK=10の実行は完了している。
+1Mのコードと成果物は別保存であり、ローカルでの保存場所は`research/local-context.md`を参照する。
+再実行する際は、その保存先のコード、config、実行記録を使う。
+下記の100K用コマンドで1M結果を再現できるとは扱わない。
+
+## このフォルダに残した100Kコード
 
 SASRecで生成した同じ100候補からK件（既定10件）を選び、SASRec、Weighted Sum(r,d)、NSGA-II(r,d)を比較する。
 研究上の問いは、SASRec relevanceとgenre-based taste distanceのトレードオフにおいて、NSGA-IIがrelevance-onlyと単純加重和より有用かどうかである。
