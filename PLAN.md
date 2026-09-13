@@ -4,9 +4,9 @@
 
 ## 現在の実行モード
 
-**PHASE_4_PLANNING_ONLY — Phase 1〜3はAstra再レビュー合格。現在はPhase 4の設計のみ。実装は未許可。**
-2026-09-13のユーザー指示により公開checkpointをpush済み：Research `a117f75`、Engineering `45b436d`。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。この記録が以下の過去の未公開・レビュー待ち記載に優先する。新規学習、人間参加者の募集、サービス接続、アプリdeployは自動実行しない。
-モデル変更だけを開始指示と解釈しない。
+**PHASE_4_REVIEW_FIX — 2026-09-13のAstra判定（P1由来情報、P2 hash再計算、P2 CLI除外、元repo同期）を実装する。Phase 5、deploy、募集、学習、commitは含めない。**
+正本はEngineeringの`docs/phase4-implementation.md`、`docs/research-export-v0.2.md`、`docs/fma40-audit.json`。40曲を入れ替えない。0.1は維持。
+公開checkpoint：Research `a117f75`、Engineering `45b436d`（https://github.com/t3-sketch/graph-rec）。新規学習、人間参加者の募集、サービス接続、アプリdeployは自動実行しない。
 
 ## 目的と責務
 
@@ -82,6 +82,12 @@ Astraが仕様を確定してからSolが実装する。仕様の正本はEngine
 
 ## Phase 4：Graph-Recの実データ探索経路
 
+最新更新：40曲実装とブラウザ検証まで完了。正本はEngineeringの`docs/phase4-implementation.md`、`docs/fma40-audit.json`、`docs/research-export-v0.2.md`。20曲の中間目標は撤回済み。0.1 readerは維持。このデモを人間評価完了やexperienced serendipityの実証とは扱わない。下の旧設計メモより、実施結果を優先する。
+
+ユーザー確定方針（2026-09-13）：最初はCC音楽の限定カタログでよい。面接官に音楽探索の雰囲気が伝わるデモを目標とする。市販曲検索は必須にしない。2026-09-13の実装開始指示により、設計済みの40曲範囲を実装する。
+この方針に基づく設計案：20曲でデータ・試聴の成立を確認し、デモは40曲程度を目安とする。100曲は必須にしない。3つ程度の開始曲から選択→8候補→2回の枝展開→試聴→Like/Save→固定ケース出力を確認する。曲数は展示上の目安であり、研究の標本数ではない。
+FMAは第一候補のまま、曲別の権利と取得方法は未確認。baseline案は直接genre集合のJaccard類似度・同点は固定ID順。推薦品質の改善は未計測。次の設計作業は20曲の選定・配布方法の成立確認、その後に実曲用export契約を確定する。
+
 目標：曲を選ぶ → 候補を見る → 枝を探索する → 試聴可能な曲を聴く → 明示的反応を記録する → ケースを書き出す。
 
 - 先にAstraとユーザーがデータ源、利用可能な履歴、baselineを確定する。未確定のサービスやモデルをSolが独自採用しない。
@@ -92,6 +98,8 @@ Astraが仕様を確定してからSolが実装する。仕様の正本はEngine
 - サーバーが必要な場合に静的出力構成の変更を設計する。既存Site登録を重複作成しない。
 
 完了条件：一往復が動き、枝保持・drag・復元・Like/Saveを維持し、候補取得時間を計測。UI性能はブラウザで未計測なら未計測と記す。
+
+2026-09-13実施結果：実装とブラウザ検証まで完了。検証対象はEngineeringの別作業コピー（静的previewで確認）。3開始曲は各8候補。The Factoryから2回以上展開し23曲。試聴成功2曲（The Factoryは0:29まで完了、I'm Not Lazyは途中再生）。Like/Save、reload復元、再生失敗表示、legacy mockセッション拒否を確認。UI exportは`schema_version=0.2 case_count=3 recommendation_count=22 event_count=31`。音源40ファイル、30,254,221 bytes。候補取得時間と500-node FPS、主観品質、experienced serendipityは未計測。Graph-Rec本体へは0.2コードの一部と40曲音源を入れたが、同期時のI/O timeoutでUI/storeの上書きが残る。仕様書は実装証拠に書き換えていない。
 
 ## Phase 5：最初のLLM評価研究
 
@@ -110,21 +118,21 @@ Engineering：デモ、起動、構成、品質・速度の実測。Research：�
 ## 実行順・設計判断
 
 Phase 1 → 2 → Astraレビュー → 3 → 4。Phase 5の設計は独立に進められるが、募集・データ取得はprotocol確定後。Phase 6は各成果に合わせる。
-SolのPhase 1・2・3は実装済み。Phase 3はAstraレビュー待ち。Phase 4には進まない。残る設計判断：GitHub公開設定、音楽データ源、baseline、KG関係、実データ用schema拡張、human protocol、費用・期限。
+SolのPhase 1〜4は実装済み。Phase 4はAstraレビュー待ち。Phase 5には進まない。残る設計判断：Graph-Rec本体への残同期、human protocol、費用・期限。
 Solは技術的障害のない限り再設計しない。障害時は証拠、影響、最小代替案を記録してAstraへ返す。複雑な設計変更は実装前にこの計画を更新する。
 
 ## 再開チェックポイント
 
-2026-09-13最新：Phase 3のP2 2件は再レビュー合格。Engineering test 9/9・typecheck、Research test 10/10を確認。buildとブラウザは再レビューで再実行していない。両repoの公開checkpointは上記のとおり完了。次はAstraがデータ源・baseline・最初の完成範囲を提案し、ユーザー合意後に実装仕様を確定する。SolによるPhase 4実装は未許可。以下はPhase 3提出時の記録であり、最新の許可・状態として使わない。
+2026-09-13最新：Phase 4実装とブラウザ検証まで完了。Astraレビュー待ち。Phase 5には進まない。0.1 mock exportは維持。公開checkpointはResearch `a117f75`、Engineering `45b436d`のまま（今回commit/pushしていない）。
 
-- 許可範囲：2026-09-13のPhase 3実装指示。実施済みはPhase 1、Phase 2、Phase 3実装。Phase 4は未許可。
-- 完了：計画文書化、Phase 1、Phase 2、Phase 3（mock CLI export、Python reader、仕様の受入検査）。
-- レビュー完了：Phase 1・2の前回3件を再検査し合格。Phase 3初回レビューはP2 2件。エスケープ重複キーと実在日時を両側で揃えて再提出。
-- 設計完了：Phase 3 version 0.1。正本はGraph-Recの `docs/research-export.md`。
-- 未着手：Phase 4〜6、GitHub作成・公開・push、commit、新規学習、データ収集。
-- 次の一手：AstraがPhase 3実装をレビューする。Phase 4には進まない。
-- 変更ファイル（レビュー戻し）：Researchは `studies/music-evaluator/{validate_export.py,test_validate_export.py,README.md}`、`docs/PROJECT_STATE.md`、`research/decisions.md`、`research/research_state.md`、この`PLAN.md`。Engineeringは `src/research-export/*`、`scripts/export-research.ts`、`scripts/isolated-run.py`、`tests/research-export.test.ts`、`package.json`、`PLAN.md`、`AGENTS.md`、`.codex/IMPLEMENTATION_STATE.md`。
-- 検証：Graph-Rec `python3 scripts/isolated-run.py test` 9/9、`typecheck` PASS、`build` PASS。Research `python3 -B studies/music-evaluator/test_validate_export.py` 9/9。実mock bundleをreaderが `schema_version=0.1 case_count=2 recommendation_count=15`。同一fixtureのcases bytes/hash一致。既存dir再実行は拒否し4ファイルhash不変。ブラウザ検証は未実施（UI未変更）。
-- 未検証：Astraによる仕様照合レビュー、事前仕様との照合、公開snapshotとresumed2当時ソースのバイト一致、フル再学習、GitHub公開設定、ブラウザ再検証、H1/sanityのcommit。
+- 許可範囲：2026-09-13のPhase 4実装指示。40曲FMA、genre Jaccard、export 0.2、ブラウザ検証。Phase 5・deploy・募集・学習は未許可。
+- 完了：計画文書化、Phase 1、Phase 2、Phase 3、Phase 4（作業コピー上の実装とブラウザ検証、Research 0.2 reader）。
+- レビュー完了：Phase 1〜3。Phase 4は未レビュー。
+- 設計完了：Phase 3 version 0.1、Phase 4実装仕様とexport 0.2。正本はGraph-Recの `docs/research-export.md` と `docs/research-export-v0.2.md`。
+- 未着手：Phase 5〜6、Graph-Rec本体への残差分同期、commit、push、新規学習、データ収集。
+- 次の一手：AstraがPhase 4実装を仕様照合する。Documents側Graph-Recへ未同期のUI/storeを入れる。Phase 5には進まない。
+- 変更ファイル：Researchは `studies/music-evaluator/{validate_export.py,validate_export_v02.py,test_validate_export.py,README.md}`、`docs/PROJECT_STATE.md`、`research/decisions.md`、`research/research_state.md`、この`PLAN.md`。Graph-Rec本体はcatalog/音源/0.2モジュールの一部のみ同期。
+- 検証：作業コピーでtest 13/13、typecheck、`next build --webpack`。Research `python3 -B studies/music-evaluator/test_validate_export.py` 12/12。ブラウザ検証は上記Phase 4実施結果。CLI 0.2 fixtureは `schema_version=0.2 case_count=3 recommendation_count=22 event_count=0`。0.1は維持。
+- 未検証：AstraによるPhase 4仕様照合、Graph-Rec本体でのisolated-run、候補取得時間の計装、UI性能、experienced serendipity、フル再学習、H1/sanityのcommit。
 
 研究の実測は各report、背景は `research/research_state.md`、進捗は `ROADMAP.md` に置き、ここへ数値を重複管理しない。

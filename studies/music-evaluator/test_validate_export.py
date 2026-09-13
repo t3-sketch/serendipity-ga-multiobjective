@@ -230,6 +230,24 @@ class ValidateExportTests(unittest.TestCase):
             load_cases(text)
         self.assertIn("case_id", str(error.exception))
 
+    def test_canonical_json_japanese_and_controls(self) -> None:
+        from validate_export_v02 import canonical_json
+        encoded = canonical_json({"b": "日本語", "a": "x\u0001", "list": [1, True, None]})
+        self.assertEqual(encoded, '{"a":"x\\u0001","b":"日本語","list":[1,true,null]}')
+
+    def test_v02_rejects_nonempty_ratings_array(self) -> None:
+        from validate_export_v02 import validate_bundle_v2
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "bundle.json"
+            path.write_text(json.dumps({
+                "manifest": {"schema_version": "0.2"},
+                "catalog": [], "cases": [], "events": [],
+                "human_ratings": [{}], "llm_predictions": [],
+            }), encoding="utf-8")
+            with self.assertRaises(BundleError) as error:
+                validate_bundle_v2(path)
+            self.assertIn("human_ratings", str(error.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

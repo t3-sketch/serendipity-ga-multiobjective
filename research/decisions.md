@@ -296,4 +296,16 @@ canonical採用は完了したが、M1全体の完了とhuman validityは未達�
 
 **根拠**：Graph-Recに既存のprovider境界があり、UIやモデルを変えずに入出力を取得できる。空ファイルを0点と読まないことで、未取得と欠測0を混同しない。
 
-**結果**：実mock 2ケース（15候補）をPython readerが検査した。同一fixtureのcases bytes/hashは一致し、既存ディレクトリへの再実行は拒否した。Astraレビュー待ち。mock出力を実推薦成果とは扱わない。Phase 4は未着手。
+**結果**：実mock 2ケース（15候補）をPython readerが検査した。同一fixtureのcases bytes/hashは一致し、既存ディレクトリへの再実行は拒否した。Astra再レビュー合格。mock出力を実推薦成果とは扱わない。
+
+## 2026-09-13：Phase 4は40曲FMAデモとgenre Jaccard、export 0.2に限定する
+
+**課題**：面接官に探索の雰囲気を見せたいが、市販曲検索と学習済み系列モデルは未確定だった。
+
+**判断**：固定40曲（CC BY 3.0 / 3.0 US、FMA抜粋を再エンコードしない）、直接genre集合のJaccard、同点は数値FMA ID昇順。開始曲3、seed 8候補、展開7。export 0.2は単一`bundle.json`。Like/Saveは明示反応でありランキングに使わない。類似度を好みやexperienced serendipityとして出さない。
+
+**根拠**：系列履歴が不足する段階では属性集合のbaselineが最小。曲の入れ替えは監査JSONを壊す。0.1 mock経路は検査用に残す。
+
+**結果**：作業コピーで3開始曲・枝展開・試聴・Like/Save・reload・再生失敗・legacy拒否・0.2 exportを確認した。音源40ファイル、30,254,221 bytes。UI bundleは3 case / 22候補 / 31 event。候補取得時間と主観品質は未計測。このデモを推薦品質やexperienced serendipityの改善とは扱わない。
+
+**未完**：Astraによる仕様照合、Graph-Rec本体への残同期、commit、Phase 5のhuman protocol。

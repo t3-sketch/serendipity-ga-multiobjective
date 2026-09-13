@@ -267,11 +267,20 @@ def validate_bundle(directory: Path) -> tuple[dict, list[dict]]:
 
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
-        print("Usage: python -B studies/music-evaluator/validate_export.py <bundle-dir>", file=sys.stderr)
+        print("Usage: python -B studies/music-evaluator/validate_export.py <bundle-dir-or-bundle.json>", file=sys.stderr)
         return 2
-    directory = Path(argv[1])
+    target = Path(argv[1])
     try:
-        manifest, cases = validate_bundle(directory)
+        if target.is_file():
+            from validate_export_v02 import validate_bundle_v2
+            manifest, cases, events = validate_bundle_v2(target)
+            recs = sum(len(item["recommendations"]) for item in cases)
+            print(
+                f"schema_version={manifest['schema_version']} case_count={len(cases)} "
+                f"recommendation_count={recs} event_count={len(events)}"
+            )
+            return 0
+        manifest, cases = validate_bundle(target)
     except BundleError as error:
         print(error, file=sys.stderr)
         return 1

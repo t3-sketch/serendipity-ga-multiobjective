@@ -72,7 +72,10 @@ M1の事前判断記録と1M実験条件を照合する。
 
 </details>
 
-### 2026-09-13
+<details>
+<summary>2026-09-13</summary>
+
+<br>
 
 #### 今日やったこと
 
@@ -97,6 +100,8 @@ S01の報告値は公開expected CSVと一致する。H1のSASRec行と7 epoch�
 #### Next
 
 AstraレビューのあとPhase 3。Phase 2の範囲ではM1の事前判断照合へ戻れる。
+
+</details>
 
 ## 実装と資料
 

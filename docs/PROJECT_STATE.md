@@ -4,9 +4,9 @@
 
 ## 実行モード
 
-Phase 1〜3はAstra再レビュー合格。Phase 3のP2 2件（エスケープ重複JSONキー、実在しない日時）を再検査し、Engineering test 9/9・typecheck、Research test 10/10を確認。build・ブラウザは再レビューでは未実施。Phase 4は設計のみ、実装未許可。
-仕様はEngineeringの `docs/research-export.md`。Research側の仕様版記録は `studies/music-evaluator/README.md`。
-ユーザー指示によりResearch `a117f75`、Engineering `45b436d`をpush済み。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。新規学習、募集、サービス接続、アプリdeployは未許可。
+Phase 1〜3はAstra再レビュー合格。Phase 4は実装とブラウザ検証まで完了、Astraレビュー待ち。Phase 5、deploy、募集、学習は未許可。
+0.1はディレクトリreaderのまま。0.2は単一`bundle.json`。仕様正本はEngineeringの `docs/research-export.md` と `docs/research-export-v0.2.md`。Research側の入口は `studies/music-evaluator/README.md`。
+公開checkpointはResearch `a117f75`、Engineering `45b436d`。今回commit/pushしていない。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。
 
 ## Phase 1で確定した正本
 
@@ -51,6 +51,14 @@ sanity公開候補：計画、報告、STATUS、スクリプト、config、requi
 破損fixture（未知schema、余分key、NaN、重複key、rank、既探索曲、hash改変、非空評定ファイル）は拒否。hash再計算後も構造違反は失敗する。
 mock bundleを実推薦やexperienced serendipityの証拠としない。
 
+## Phase 4（2026-09-13）
+
+Engineeringの別作業コピーで静的previewを確認した。
+40曲、音源合計 30,254,221 bytes。開始曲は The Factory / I Want To Destroy Something Beautiful / I'm Not Lazy。各8候補。The Factory経路で2回以上展開し23曲。試聴成功2、再生失敗表示あり。Like/Saveは明示反応。reloadで23曲を復元。legacy mockセッションは「older catalog」で拒否。
+UI export：`schema_version=0.2 case_count=3 recommendation_count=22 event_count=31`。`purpose=engineering_demo`、`data_kind=real_catalog`、`provider.id=genre-jaccard-v1`、`dataset.id=sonder-fma-40-v1`。評定/予測は空。Research reader 12/12。
+候補取得時間、500-node FPS、主観品質、experienced serendipityは未計測。genre Jaccardの上昇を推薦品質や経験の改善と呼ばない。
+Graph-Rec本体はcatalog・音源・0.2モジュールの一部のみ同期。DocumentsのI/O timeoutでUI/store上書きが残る。仕様書は実装証拠に書き換えていない。
+
 ## 次の再開点
 
-AstraがPhase 4のデータ源・baseline・最初の完成範囲を設計する。ユーザー合意前にSolはUI配線・実データ接続を始めない。
+AstraがPhase 4を仕様照合する。Graph-Rec本体へ未同期のUI/storeを入れる。Phase 5、commit、push、募集は未許可。

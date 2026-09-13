@@ -11,6 +11,7 @@
 対象領域、期限、Graph-Rec仕様、データ源は未確定。新versionや新規実験は未着手である。
 既存M1の未完了事項は残り、人間評価前のLLMをprototypeとして扱う原則も変わらない。
 2026-09-13のPhase 3 version 0.1はオフラインの`integration_test` / `synthetic`接続検証である。空の評定・予測ファイルは未取得であり、0点ではない。mock推薦のexportを実推薦成果やexperienced serendipityの改善と読まない。
+2026-09-13のPhase 4はEngineeringデモである。40曲FMA、genre Jaccard、export 0.2（`purpose=engineering_demo`、`data_kind=real_catalog`）まで確認した。これは研究標本でも、推薦品質やexperienced serendipityの実証でもない。空の`human_ratings` / `llm_predictions`は未取得のままである。
 
 2026-09-10に相談チャットと既存の対談記録を照合した。
 相談元の識別子はローカル専用の`local-context.md`に保持する。
