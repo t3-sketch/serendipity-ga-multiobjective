@@ -4,8 +4,8 @@
 
 ## 現在の実行モード
 
-**PHASE_3_IMPLEMENTED_REVIEW — Phase 3 version 0.1。AstraのP2 2件を修正済み。再レビュー待ち。Phase 4には進まない。**
-GitHub作成・公開・push、commit、新規学習、人間参加者の募集、サービス接続は自動実行しない。
+**PHASE_4_PLANNING_ONLY — Phase 1〜3はAstra再レビュー合格。現在はPhase 4の設計のみ。実装は未許可。**
+2026-09-13のユーザー指示により公開checkpointをpush済み：Research `a117f75`、Engineering `45b436d`。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。この記録が以下の過去の未公開・レビュー待ち記載に優先する。新規学習、人間参加者の募集、サービス接続、アプリdeployは自動実行しない。
 モデル変更だけを開始指示と解釈しない。
 
 ## 目的と責務
@@ -19,10 +19,10 @@ GitHub作成・公開・push、commit、新規学習、人間参加者の募集�
 
 このファイルを全体計画の正本とする。Graph-Recの `PLAN.md` は担当範囲とこの正本への案内を持つ。
 同じrepo名やアプリ上の配置は同期の証拠にならない。別プロジェクトが見つからない場合は、その作業場所を確認してから依存作業へ進む。
-Researchのrepo名は当面維持。EngineeringのGitHub名候補は `graph-rec`（未作成・公開設定未決）。
+Researchのrepo名は当面維持。Engineeringは `t3-sketch/graph-rec`（Public）。
 新しい推薦実装の正本はEngineering。Researchでは同じ実装を作り直さず、固定commit・設定からの出力を評価する。旧v0は歴史的snapshotとして保持する。
 
-## 確認済みの現在地
+## Phase 0時点の記録（変更前）
 
 - Research HEADは `7c158a0`。既存の `research/decisions.md` と `research/research_state.md` に未コミット変更がある。上書きしない。
 - `v0-H1/` と `sasrec-sanity-check/` は未追跡。フォルダ全体を一括追加しない。
@@ -114,6 +114,8 @@ SolのPhase 1・2・3は実装済み。Phase 3はAstraレビュー待ち。Phase
 Solは技術的障害のない限り再設計しない。障害時は証拠、影響、最小代替案を記録してAstraへ返す。複雑な設計変更は実装前にこの計画を更新する。
 
 ## 再開チェックポイント
+
+2026-09-13最新：Phase 3のP2 2件は再レビュー合格。Engineering test 9/9・typecheck、Research test 10/10を確認。buildとブラウザは再レビューで再実行していない。両repoの公開checkpointは上記のとおり完了。次はAstraがデータ源・baseline・最初の完成範囲を提案し、ユーザー合意後に実装仕様を確定する。SolによるPhase 4実装は未許可。以下はPhase 3提出時の記録であり、最新の許可・状態として使わない。
 
 - 許可範囲：2026-09-13のPhase 3実装指示。実施済みはPhase 1、Phase 2、Phase 3実装。Phase 4は未許可。
 - 完了：計画文書化、Phase 1、Phase 2、Phase 3（mock CLI export、Python reader、仕様の受入検査）。

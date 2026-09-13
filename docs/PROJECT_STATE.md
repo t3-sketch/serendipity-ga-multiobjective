@@ -4,9 +4,9 @@
 
 ## 実行モード
 
-Phase 1とPhase 2は再レビュー合格。Phase 3 version 0.1は実装済み。Astra初回レビューのP2 2件（エスケープ重複JSONキー、実在しない日時）を修正し再レビュー待ち。Phase 4には進まない。
+Phase 1〜3はAstra再レビュー合格。Phase 3のP2 2件（エスケープ重複JSONキー、実在しない日時）を再検査し、Engineering test 9/9・typecheck、Research test 10/10を確認。build・ブラウザは再レビューでは未実施。Phase 4は設計のみ、実装未許可。
 仕様はEngineeringの `docs/research-export.md`。Research側の仕様版記録は `studies/music-evaluator/README.md`。
-GitHub作成・公開・push、commit、新規学習、募集、サービス接続は未許可。
+ユーザー指示によりResearch `a117f75`、Engineering `45b436d`をpush済み。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。新規学習、募集、サービス接続、アプリdeployは未許可。
 
 ## Phase 1で確定した正本
 
@@ -53,4 +53,4 @@ mock bundleを実推薦やexperienced serendipityの証拠としない。
 
 ## 次の再開点
 
-AstraがPhase 3のP2修正を再レビューする。Phase 4のUI配線・実データ接続には進まない。
+AstraがPhase 4のデータ源・baseline・最初の完成範囲を設計する。ユーザー合意前にSolはUI配線・実データ接続を始めない。
