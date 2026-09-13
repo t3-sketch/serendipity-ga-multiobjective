@@ -21,3 +21,7 @@ research/discussions/
 v0/CHATGPT_CONTEXT_PROMPT.md
 v0/NOTEBOOKLM.md
 v0/NOTEBOOKLM_AUDIO_PROMPT.md
+
+# Experiment handoff archives (checkpoints / datasets), not public by default
+*.tar.gz
+v0-H1/logs/

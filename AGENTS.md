@@ -1,5 +1,17 @@
 # Research instructions
 
+## Agent handoff — 最初に読む
+
+1. 大きな作業の前にルートの `PLAN.md` を読む。再編計画と実行モードの正本とする。
+2. `PLAN.md` の再開チェックポイントを読み、必要な `research/research_state.md`、`ROADMAP.md`、対象plan/reportだけを読む。
+3. Astraはarchitect、Solはimplementer。Cursor等の実装agentも採用計画に従い、技術的に詰まるまでは再設計しない。
+4. `PLANNING_ONLY` 中は実装ファイルを変更しない。実装開始のユーザー指示を受けたら許可範囲をPLANへ記録する。
+5. 複雑な設計変更は実装前にPLANへ反映する。技術的障害は証拠・影響・最小代替案を添えて設計担当へ返す。
+6. 実装・検証後と中断前にPLANの再開チェックポイントを更新し、結果は既存の状態文書・reportへ記録する。
+7. 必要なファイルだけ読み、広範なrepo走査と過去履歴の再読を避ける。明示的な依頼がない限りsubagentを作らない。
+
+計画記録のみの依頼では、通常の文書更新規則を理由に変更対象を増やさない。実行許可後は`PLAN.md`の当該Phaseと再開チェックポイントに従う。
+
 ## 作業開始時の読み分け
 
 研究判断の前に `ROADMAP.md`（Macro）と `research/research_state.md`（背景と採用前提）を読む。
@@ -24,11 +36,11 @@ v0はMovieLens 1Mのcanonical baselineであり、SASRec候補生成とNSGA-II�
 結果の正本は`v0/reports/S01-ml-1m-baseline.md`とする。
 FAS-MOEAの再現、指標の妥当性検証、experienced serendipityの改善実証として扱わない。
 正式条件は履歴平均超えpositive、目的(mean r, mean d)、K=10、候補100。r×dは診断専用とする。
-公開コードとconfigは100K用の既存実装であり、1M結果の再現コードとは扱わない。
+現行の1M公開入口は`v0/reproduce/`である。`v0/experiment.py`と`v0/config.json`は100K用の歴史的snapshotであり、現行入口ではない。
 100Kの結果文書はGit historyで参照し、現行の研究結果として引用しない。
 既存コード、環境、データ、出力を勝手に全面改修または上書きしない。
 新規実験は承認された別設定と別出力先を使う。
-1Mのversion配置はv0に確定した。別保存のコード、データ、出力は自動移動しない。
+1Mのversion配置はv0に確定した。別保存のコード、データ、出力は自動移動しない。公開snapshotを作っても元成果物は保持する。
 保存証拠の確認は`v0/RUNBOOK.md`、ローカル保存場所は公開対象外の`research/local-context.md`を参照する。
 
 Macroは`M1`〜`M5`、Microは`v0-S1`のようにversion付きで呼ぶ。

@@ -1,0 +1,16 @@
+{
+  "python_version": "3.10.20",
+  "recbole": "1.2.1",
+  "torch": "2.5.1",
+  "numpy": "1.26.4",
+  "pymoo": "0.6.1.5",
+  "pandas": "2.2.3",
+  "threads": 2,
+  "input_sha256": {
+    "ratings.dat": "506d64ca44484487c11dc2d9a28de5c54948213e6b96285e298afe28d6ea4e0f",
+    "movies.dat": "0140fc2356357c1a851d0f52e893a1e4d3696df632c4141cea8d5bc3d621f0b9"
+  },
+  "resumed2_environment_source_sha256": "474006c6439bd71af69e1c622edd2bac0b0f842b27ae03e4161e06e6ead347a3",
+  "public_snapshot_experiment_sha256": "f9d4d17d90227f6296e83e248cd53328ffc06ae52655f9b2b5c88614e02a1e12",
+  "note": "resumed2 recorded a different experiment.py hash than the later Phase 1 diagnostic snapshot copied here. H1 reproduced the saved metrics with a third harness. Do not treat the three files as byte-identical."
+}

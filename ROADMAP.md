@@ -1,6 +1,6 @@
 # 研究全体のMacroロードマップ
 
-最終更新：2026-09-11
+最終更新：2026-09-13
 
 研究テーマを`M1`〜`M5`、各versionの実験を`v0-S1`のように区別する。
 旧文書のStep 1〜5はM1〜M5に対応する。
@@ -11,7 +11,7 @@
 
 | ID | Research Question | 状態と簡潔な結果 | 研究記録 |
 |---|---|---|---|
-| M1 | sequential backbone上で、proxy最適化はどんな推薦品質のトレードオフを作るか | 部分完了。1Mをv0 canonical baselineに採用。距離上昇とheld-out品質低下を観測。事前設計との照合は未完 | [v0 Micro](v0/ROADMAP.md)、[1M正式report](v0/reports/S01-ml-1m-baseline.md)、[仮説RQ5](research/hypotheses.md) |
+| M1 | sequential backbone上で、proxy最適化はどんな推薦品質のトレードオフを作るか | 部分完了。1Mをv0 canonical baselineに採用。距離上昇とheld-out品質低下を観測。H1で指標再現。事前設計との照合は未完 | [v0 Micro](v0/ROADMAP.md)、[1M正式report](v0/reports/S01-ml-1m-baseline.md)、[H1要約](v0/reports/S02-h1-candidate-generators.md)、[仮説RQ5](research/hypotheses.md) |
 | M2 | offline metricは人間のF/R/Eと総合serendipityに対応するか | 未完。人間評価未取得 | [仮説RQ1](research/hypotheses.md) |
 | M3 | LLMは人間のFortuitous / Refreshing / Enrichingを予測できるか | 未完。human-validated evaluatorなし | [仮説RQ2](research/hypotheses.md) |
 | M4 | F/R/Eをどう集約すると人間の総合判断に適合するか | 未完。集約規則未採用 | [仮説RQ3](research/hypotheses.md) |
@@ -50,6 +50,7 @@ RQ、positive、目的、primary outcome、代表解規則、許容する品質�
 「事前に決定」「事後の解釈」「未確認」を区別する。
 1Mの実施条件をv0 canonical baselineとする配置は2026-09-11にユーザーが採用した。
 この事後の採用判断と、実験前の評価設計の確認は区別する。
+H1は候補生成器比較であり、この条件で乗り換えを正当化する優位性は検出できなかった。M1の完了ではない。
 追加実験、v1作成、既存出力の移動はまだ承認された作業ではない。
 
 <a id="m1"></a>

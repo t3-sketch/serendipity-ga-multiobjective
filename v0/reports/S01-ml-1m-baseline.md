@@ -84,14 +84,17 @@ NSGA-IIが別の目的関数や制約でも不要だとは結論しない。
 
 2026-09-11に、ユーザー指定の既知結果と両runの保存済み`test/summary.csv`を照合した。
 両runの`config.json`と`completion.json`、診断runの`split.json`、`checkpoint.json`、`test/paired_bootstrap.csv`も確認した。
-学習、新規実験、Notebook実行、当時のcheckの再実行は行っていない。
-この公開repoにはMarkdownの集計報告を置き、データ、checkpoint、個別ユーザー出力は同梱しない。
-保存済み証拠の確認手順と公開コードとの差は[RUNBOOK](../RUNBOOK.md)を参照する。
+
+2026-09-13（Phase 2）：公開入口を`v0/reproduce/`にした。公開集計抜粋とS01報告値を`verify_saved.py`で再照合した。
+H1 A0は保存checkpoint再利用で下流7指標が差0.0、A1はscratch 7 epochの`training.csv`が差0.0だった。
+公開`experiment.py`はresumed2記録hashともH1 harnessともバイト一致しない。一致したのは指標である。
+フル再学習と本実験の再実行は未実施。データ、checkpoint、個別ユーザー出力は同梱しない。
+手順は[RUNBOOK](../RUNBOOK.md)。H1とsanityの範囲は[S02](S02-h1-candidate-generators.md)、[S03](S03-sasrec-sanity-check.md)。
 
 ## 未検証事項
 
 - 当時の事前仕様と判断記録の対応。primary outcome、代表解規則、許容accuracy lossをいつ固定したかの照合。
-- 当時のコードと環境を復元した再現確認。公開repoのコードを1M実験のsnapshotとは扱わない。
+- 公開snapshotとresumed2当時の`experiment.py`をバイト一致させた復元。H1は指標再現であり、同一ファイルの復元ではない。
 - 1MでのK=10〜30の頑健性。旧100Kのリスト長比較を1Mの証拠として流用しない。
 - M2の人間評価、M3のLLM human validation、M4の集約規則。検証前のLLMはprototypeである。
 
