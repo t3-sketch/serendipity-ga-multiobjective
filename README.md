@@ -13,6 +13,51 @@ SASRecによる候補生成とNSGA-IIによる再ランキングを接続し、�
 
 *An exploratory comparison of SASRec candidate generation and multi-objective reranking, separating system-side proxies from human-experienced serendipity.*
 
+## 今回のSerendipityの定義
+
+今回は、**ユーザーの普段の好みを表す嗜好ベクトルと、候補作品のジャンルベクトルとのL1距離**を、Serendipityの代理指標として用いる。実装では値域を0〜1にするため、L1距離に1/2を掛ける。
+音楽に置き換えると「普段好んで聴いている曲のジャンル傾向から、候補曲がどれだけ離れているか」に相当する。ただし、現在のv0実験はMovieLens 1Mの映画データを用いている。
+
+### 嗜好ベクトルとジャンル距離
+
+作品 $i$ のジャンルベクトルを $\mathbf{g}_i$ とする。所属ジャンルを1、それ以外を0とした18次元ベクトルを、成分の和が1になるよう正規化する。
+ユーザー $u$ の推薦時点までの履歴のうち、本人の履歴平均評価を超える、学習済みカタログ内の作品集合を $H_u^+$ とし、その平均を嗜好ベクトルとする。
+
+$$
+\mathbf{p}_u = \frac{1}{|H_u^+|}\sum_{j\in H_u^+}\mathbf{g}_j
+$$
+
+候補作品との距離と、推薦リスト $L_u$ の平均距離は次のとおり。
+
+$$
+d(u,i)=\frac{1}{2}\lVert\mathbf{p}_u-\mathbf{g}_i\rVert_1
+=\frac{1}{2}\sum_{c=1}^{18}|p_{u,c}-g_{i,c}|,
+\qquad
+D(u,L_u)=\frac{1}{K}\sum_{i\in L_u}d(u,i)
+$$
+
+今回の結果表の **mean genre distance** は、$K=10$ のリスト平均を評価対象ユーザー間で平均した値である。値が大きいほど過去の好みからジャンルが離れている。
+ただし、この距離だけでは「好みに合う」「価値ある偶然の発見だった」ことは示せない。人間が経験するSerendipityとは区別し、推薦品質はNDCGでも評価する。最適化目的は関連度と距離の2つであり、関連度と距離の積 $r\times d$ は診断専用である。
+
+### NDCG@10：好みに合う作品を上位に推薦できたか
+
+評価期間内の作品のうち、推薦時点の履歴平均評価を超え、未視聴かつ学習済みカタログ内にある作品を正解集合 $P_u$ とする。順位 $j$ の推薦作品が $P_u$ に含まれるとき $y_{u,j}=1$、それ以外は0とする。
+
+$$
+\mathrm{DCG@K}(u)=\sum_{j=1}^{K}\frac{y_{u,j}}{\log_2(j+1)}
+$$
+
+$$
+\mathrm{IDCG@K}(u)=\sum_{j=1}^{\min(K,|P_u|)}\frac{1}{\log_2(j+1)},
+\qquad
+\mathrm{NDCG@K}(u)=\frac{\mathrm{DCG@K}(u)}{\mathrm{IDCG@K}(u)}
+$$
+
+正解を上位に並べるほど高く、理想的な順位で1になる。今回は $K=10$、正解集合が空でないユーザーを対象とし、推薦の表示順はSASRecの順位に揃える。正解集合にはTop-100候補に入らなかった作品も含めるため、候補生成での取りこぼしも評価に残る。未観測作品を嫌いと判断する指標ではない。
+NSGA-IIは3つの探索seedの値をユーザー内で平均した後、評価対象974人で平均する。
+
+定義は公開実装の[ジャンルの正規化](v0/reproduce/experiment.py#L52)、[嗜好ベクトルと距離](v0/reproduce/experiment.py#L115)、[NDCG計算](v0/reproduce/experiment.py#L387)と照合した。詳細な評価条件は[正式報告](v0/reports/S01-ml-1m-baseline.md)を参照。
+
 ## MovieLens 1Mで分かったこと
 
 履歴平均超えをpositiveとし、同じ100候補からK=10件を選ぶ条件で比較した。
@@ -97,9 +142,6 @@ MovieLensはGroupLens Research Projectのデータを使用する。
 
 - Wang-Cheng Kang and Julian McAuley (2018). [Self-Attentive Sequential Recommendation](https://arxiv.org/abs/1808.09781). ICDM.（SASRec）
 - Shresth Khaitan and Rahul Shrivastava (2026). [Developing Fairness, Accuracy, and Serendipity Objective Functions for Recommendation System and Establishing Trade-off through Multi-Objective Evolutionary Optimization](https://doi.org/10.1016/j.ipm.2025.104604). Information Processing & Management.（FAS-MOEA）
-- Wei Zhou et al. (2023). [Dynamic Multi-Objective Optimization Framework With Interactive Evolution for Sequential Recommendation](https://doi.org/10.1109/TETCI.2023.3251352). IEEE Transactions on Emerging Topics in Computational Intelligence.（DMORec）
-- Jie Wang et al. (2024). [Sparks of Surprise: Multi-Objective Recommendations with Hierarchical Decision Transformers for Diversity, Novelty, and Serendipity](https://doi.org/10.1145/3627673.3679533). CIKM. [公開版](https://eprints.gla.ac.uk/330233/)
-- Jie Wang et al. (2025). [Beyond Accuracy: Decision Transformers for Reward-Driven Multi-Objective Recommendations](https://doi.org/10.1109/TKDE.2025.3582506). IEEE Transactions on Knowledge and Data Engineering.（MODT4R）[公開版](https://eprints.gla.ac.uk/357379/)
 
 ### 人間が経験するserendipity
 
