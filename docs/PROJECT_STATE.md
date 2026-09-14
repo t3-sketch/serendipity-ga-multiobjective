@@ -4,7 +4,7 @@
 
 ## 実行モード
 
-Phase 1〜3はAstra再レビュー合格。Phase 4は実装とブラウザ検証まで完了、Astraレビュー待ち。Phase 5、deploy、募集、学習は未許可。
+Phase 1〜3はAstra再レビュー合格。Phase 4のAstra 3点（由来情報、hash再計算、CLI除外）を含むEngineering正本を、ユーザー承認でiCloud外へ復元済み。旧Documentsと作業cacheは保持。現行パスは非公開のresearch/local-context.md。Phase 5、deploy、募集、学習、commit、pushは未許可。以下の同期未完記録は復元前の履歴。
 0.1はディレクトリreaderのまま。0.2は単一`bundle.json`。仕様正本はEngineeringの `docs/research-export.md` と `docs/research-export-v0.2.md`。Research側の入口は `studies/music-evaluator/README.md`。
 公開checkpointはResearch `a117f75`、Engineering `45b436d`。今回commit/pushしていない。Engineeringは https://github.com/t3-sketch/graph-rec （Public）。
 
@@ -59,6 +59,14 @@ UI export：`schema_version=0.2 case_count=3 recommendation_count=22 event_count
 候補取得時間、500-node FPS、主観品質、experienced serendipityは未計測。genre Jaccardの上昇を推薦品質や経験の改善と呼ばない。
 Graph-Rec本体はcatalog・音源・0.2モジュールの一部のみ同期。DocumentsのI/O timeoutでUI/store上書きが残る。仕様書は実装証拠に書き換えていない。
 
+## Phase 4レビュー修正（2026-09-13）
+
+P1：セッションに`buildProvenance`（catalog hashとsource_files）を保存。現在buildと不一致、または欠落なら復元もexportも拒否し新規開始を案内。SOURCE_FILES_V2にstore、session、dependencies、Explorer/MiniPlayer/SongNode/TrackInspectorを追加。
+P2：`validateBundleObject`がcatalog/cases/eventsのcanonical hashを再計算して比較。Jaccard再計算はbundle catalogを使う。
+P2：CLI fixtureは全推薦IDを除外集合へ追加。explored 1→9→16、23曲一意。
+作業コピー：test 15/15、typecheck、webpack build。Research 12/12。0.1維持。ブラウザは再実行していない。
+復元前のDocuments側Graph-Recは0.2モジュールの一部だけ更新され、UI/store/依存設定は旧状態だった。現行のEngineering正本は別途復元済みである。
+
 ## 次の再開点
 
-AstraがPhase 4を仕様照合する。Graph-Rec本体へ未同期のUI/storeを入れる。Phase 5、commit、push、募集は未許可。
+新Engineering正本で作業する。旧同期スクリプトは使わない。正本test 15/15・typecheck・webpack build、Research 12/12、CLI 0.1（2ケース/15候補）と0.2（3ケース/22候補/0イベント）の読み込みPASS。40音源（30,254,221 bytes）は監査hashと一致。ブラウザで9曲推薦・試聴進行・Like/Save・reload復元を確認。UI exportはエラー表示なしだがダウンロードイベント取得がタイムアウトし配送未確認。最終受入ではこの点を残す。旧仕様資料2件は会話から意味を復元したものでバイト一致を主張しない。Phase 5、commit、pushは未許可。

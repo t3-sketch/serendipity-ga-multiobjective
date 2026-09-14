@@ -309,3 +309,15 @@ canonical採用は完了したが、M1全体の完了とhuman validityは未達�
 **結果**：作業コピーで3開始曲・枝展開・試聴・Like/Save・reload・再生失敗・legacy拒否・0.2 exportを確認した。音源40ファイル、30,254,221 bytes。UI bundleは3 case / 22候補 / 31 event。候補取得時間と主観品質は未計測。このデモを推薦品質やexperienced serendipityの改善とは扱わない。
 
 **未完**：Astraによる仕様照合、Graph-Rec本体への残同期、commit、Phase 5のhuman protocol。
+
+## 2026-09-13：export 0.2は生成時hashを保持し、内容からhashを再計算する
+
+**課題**：保存セッションを現在buildの由来で再包装でき、TS validatorがhash改変を見逃し、CLI fixtureが既出曲を再推薦していた。
+
+**判断**：セッション開始時のcatalog/source hashを保存し、不一致は新規開始。validatorはPythonと同じくcanonical hashを再計算する。CLI除外集合には全推薦IDを入れる。
+
+**根拠**：検査は生成時のコードとカタログに結びつく必要がある。件数8/7/7だけでは重複を検出できない。
+
+**結果**：作業コピーでtest 15/15、CLI 23曲一意、hash改変拒否を確認。Documents正本へのUI/store上書きはI/O timeout。この修正をexperienced serendipityの証拠としない。
+
+**未完**：元repo同期、Astra再レビュー、ブラウザ再確認。

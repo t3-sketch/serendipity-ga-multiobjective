@@ -11,7 +11,9 @@
 
 ## 現在の実行モード
 
-**PHASE_4_REVIEW_FIX — 2026-09-13のAstra判定（P1由来情報、P2 hash再計算、P2 CLI除外、元repo同期）を実装する。Phase 5、deploy、募集、学習、commitは含めない。**
+2026-09-14最新：ユーザーがEngineeringの無料Public Hugging Face Staticデモ `t3-sketch/sonder` の公開を承認した。Sol向け手順と公開許可範囲はEngineering `PLAN.md` 冒頭を参照する。Astraは計画記録まで実施し、まだ公開していない。許可はデモ公開と関連Engineering差分に限定し、Researchのcommit/push、Phase 5、募集、課金、GPU利用は含まない。以下の一律deploy禁止記録は、この公開範囲に限り更新された。
+
+**PHASE_4_CANONICAL_RECOVERED_REVIEW — ユーザー承認によりEngineering正本をiCloud外へ復元済み。3修正を含む正本でtest・typecheck・build・Research読み込みを確認。詳細と現行パスはEngineering状態文書および非公開のresearch/local-context.md。Phase 5、deploy、募集、学習、commit、pushは含めない。**
 正本はEngineeringの`docs/phase4-implementation.md`、`docs/research-export-v0.2.md`、`docs/fma40-audit.json`。40曲を入れ替えない。0.1は維持。
 公開checkpoint：Research `a117f75`、Engineering `45b436d`（https://github.com/t3-sketch/graph-rec）。新規学習、人間参加者の募集、サービス接続、アプリdeployは自動実行しない。
 
@@ -125,21 +127,23 @@ Engineering：デモ、起動、構成、品質・速度の実測。Research：�
 ## 実行順・設計判断
 
 Phase 1 → 2 → Astraレビュー → 3 → 4。Phase 5の設計は独立に進められるが、募集・データ取得はprotocol確定後。Phase 6は各成果に合わせる。
-SolのPhase 1〜4は実装済み。Phase 4はAstraレビュー待ち。Phase 5には進まない。残る設計判断：Graph-Rec本体への残同期、human protocol、費用・期限。
+SolのPhase 1〜4とレビュー3点は実装済み。新Engineering正本への復元と基本検査は完了。Phase 4の最終受入レビューを残し、Phase 5には進まない。Documentsへの同期は廃止した。
 Solは技術的障害のない限り再設計しない。障害時は証拠、影響、最小代替案を記録してAstraへ返す。複雑な設計変更は実装前にこの計画を更新する。
 
 ## 再開チェックポイント
 
-2026-09-13最新：Phase 4実装とブラウザ検証まで完了。Astraレビュー待ち。Phase 5には進まない。0.1 mock exportは維持。公開checkpointはResearch `a117f75`、Engineering `45b436d`のまま（今回commit/pushしていない）。
+最新・正本復元後：公開Git履歴から新Engineering checkoutを作成し、修正済み作業コピーを反映。旧Documentsとcacheは保持。正本でtest 15/15・typecheck・webpack build、Research test 12/12、CLI 0.2（3ケース/22候補/0イベント）と0.1（2ケース/15候補）のreader検証PASS。40音源のSHA-256照合PASS。ブラウザは推薦・試聴・Like/Save・reload復元を確認。ダウンロードイベントはタイムアウトし、UIファイル配送は未確認。次はこの未確認項目を含む最終受入レビュー。旧同期スクリプトを実行しない。以下は復元前の履歴であり、最新指示ではない。
 
-- 許可範囲：2026-09-13のPhase 4実装指示。40曲FMA、genre Jaccard、export 0.2、ブラウザ検証。Phase 5・deploy・募集・学習は未許可。
-- 完了：計画文書化、Phase 1、Phase 2、Phase 3、Phase 4（作業コピー上の実装とブラウザ検証、Research 0.2 reader）。
-- レビュー完了：Phase 1〜3。Phase 4は未レビュー。
-- 設計完了：Phase 3 version 0.1、Phase 4実装仕様とexport 0.2。正本はGraph-Recの `docs/research-export.md` と `docs/research-export-v0.2.md`。
-- 未着手：Phase 5〜6、Graph-Rec本体への残差分同期、commit、push、新規学習、データ収集。
-- 次の一手：AstraがPhase 4実装を仕様照合する。Documents側Graph-Recへ未同期のUI/storeを入れる。Phase 5には進まない。
-- 変更ファイル：Researchは `studies/music-evaluator/{validate_export.py,validate_export_v02.py,test_validate_export.py,README.md}`、`docs/PROJECT_STATE.md`、`research/decisions.md`、`research/research_state.md`、この`PLAN.md`。Graph-Rec本体はcatalog/音源/0.2モジュールの一部のみ同期。
-- 検証：作業コピーでtest 13/13、typecheck、`next build --webpack`。Research `python3 -B studies/music-evaluator/test_validate_export.py` 12/12。ブラウザ検証は上記Phase 4実施結果。CLI 0.2 fixtureは `schema_version=0.2 case_count=3 recommendation_count=22 event_count=0`。0.1は維持。
-- 未検証：AstraによるPhase 4仕様照合、Graph-Rec本体でのisolated-run、候補取得時間の計装、UI性能、experienced serendipity、フル再学習、H1/sanityのcommit。
+2026-09-13最新：Phase 4 Astraレビュー3点を作業コピーで修正し再検査した。Documents Graph-RecへのUI/store同期はI/O timeoutで未完。Phase 5には進まない。公開checkpointはResearch `a117f75`、Engineering `45b436d`のまま。
+
+- 許可範囲：レビュー修正（P1由来情報、P2 hash再計算、P2 CLI除外、元repo同期）。Phase 5・deploy・募集・学習・commitは未許可。
+- 完了：Phase 1〜4実装、レビュー3点の作業コピー修正。
+- レビュー完了：Phase 1〜3。Phase 4は修正後の再レビュー待ち。
+- 検証先：復元前のローカル作業コピー。正本との差分はUI/storeと依存設定に残っていた。
+- 未着手：Phase 5〜6、Documents側14ファイルの上書き、commit、push。
+- 次の一手：新Engineering正本でprovenanceを再生成し、test後にAstra再レビュー。
+- 変更ファイル：Researchは`PLAN.md`、`docs/PROJECT_STATE.md`、`research/decisions.md`。作業コピーはsession/store、validateV2、buildV2、schemaV2、exportBundleV2、tests。
+- 検証：作業コピー test 15/15、typecheck PASS、webpack build PASS。CLI 0.2は explored 1/9/16、23曲一意。0.1は15候補。Research 12/12。ブラウザは今回未再実行。
+- 未検証：Astra再レビュー、Documents正本でのisolated-run、ブラウザ再確認。
 
 研究の実測は各report、背景は `research/research_state.md`、進捗は `ROADMAP.md` に置き、ここへ数値を重複管理しない。
