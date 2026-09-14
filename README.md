@@ -1,4 +1,4 @@
-# 音楽の「出会えてよかった」を考える研究日記
+# Serendipity Recommendation — 推薦の評価指標を問い直す
 
 推薦の代理指標が高いことと、人が「価値ある偶然の発見をした」と感じることは同じだろうか。
 この研究では、推薦システム側の評価と、人間が経験するserendipityの対応を検証する。
@@ -7,11 +7,25 @@
 SASRecによる候補生成とNSGA-IIによる再ランキングを接続し、同じ候補上で単純加重和と比較した。
 人間評価による指標の妥当性検証と、LLMによる評価の近似は今後の研究である。
 
+**個人研究：問い・比較条件の整理、推薦実験と結果の検証。** 音楽探索を問題意識とし、現在のオフライン比較には映画データのMovieLens 1Mを使用しています。
+
+**[正式な結果](v0/reports/S01-ml-1m-baseline.md)** · [再現の入口](v0/reproduce/) · [確認手順](v0/RUNBOOK.md) · [音楽探索デモ Sonder](https://github.com/t3-sketch/graph-rec)
+
+*An exploratory comparison of SASRec candidate generation and multi-objective reranking, separating system-side proxies from human-experienced serendipity.*
+
 ## MovieLens 1Mで分かったこと
 
 履歴平均超えをpositiveとし、同じ100候補からK=10件を選ぶ条件で比較した。
 Weighted SumとNSGA-IIはSASRecよりmean genre distanceが高い一方、NDCG@10が低かった。
 NSGA-IIとWeighted SumのNDCG差の95%区間は0を跨ぎ、推薦品質上の優位性は確認できない。
+
+| 手法 | NDCG@10（既知の好みへの適合） | mean genre distance（履歴からのジャンル距離） |
+| --- | ---: | ---: |
+| SASRec | 0.095103 | 0.727851 |
+| Weighted Sum | 0.050995 | 0.930735 |
+| NSGA-II | 0.051279 | 0.930735 |
+
+評価対象はtest 974人、学習seedは1つ。ジャンル距離はシステム側の代理指標であり、高いほど人にとって良いとは限りません。NSGA-IIとWeighted SumのNDCG差は0.000284、95%CIは[−0.000067, 0.000919]でした。
 
 これはsystem-side proxyと推薦品質のtrade-offの記録である。
 FAS-MOEAの再現や、人間が経験するserendipityの改善を示した結果ではない。
@@ -28,6 +42,27 @@ FAS-MOEAの再現や、人間が経験するserendipityの改善を示した結�
 | 検証済みの近似評価を使う推薦 | 未完 |
 
 研究全体の問いと依存関係は[Macroロードマップ](ROADMAP.md)、各実験の問いと結果は[v0のMicroロードマップ](v0/ROADMAP.md)を参照する。
+
+## 実装と資料
+
+SASRecの学習にはRecBole、再ランキングにはpymooのNSGA-IIを使用する。
+学習済みモデルの後段で推薦集合を選ぶ構成であり、SASRec自体をNSGA-IIで学習する方式ではない。
+
+- [結果の確認手順](v0/RUNBOOK.md)：現行の1M入口と保存集計の照合
+- [研究背景](research/research_state.md)と[先行研究](research/literature.md)：概念、主張の範囲、関連文献
+- [研究の進め方](research/README.md)：計画、報告、相談からの引き継ぎ
+
+現行の公開入口は[v0/reproduce/](v0/reproduce/)である。
+公開対象だけで小規模な境界検査と報告値照合ができる。フル再学習は未実施。
+`v0/experiment.py`は100K用の歴史的snapshotである。100Kの結果文書はGit historyに残す。
+
+この公開リポジトリにはコード、研究文書、集計結果の報告を収録する。
+データ、checkpoint、ユーザー単位の出力、相談履歴は含めない。
+報告内のrun IDと証拠ファイル名は別保存の記録を識別するもので、GitHubに出力を同梱したことを意味しない。
+
+MovieLensはGroupLens Research Projectのデータを使用する。
+出典：F. Maxwell Harper and Joseph A. Konstan (2015), *The MovieLens Datasets: History and Context*, [DOI](https://doi.org/10.1145/2827872)。
+公開時は[データ利用条件](v0/DATA_LICENSE.md)を確認し、データ、checkpoint、ユーザー単位の出力をこのREADMEと一緒に無条件で再配布しない。
 
 ## 研究の記録
 
@@ -102,27 +137,6 @@ S01の報告値は公開expected CSVと一致する。H1のSASRec行と7 epoch�
 AstraレビューのあとPhase 3。Phase 2の範囲ではM1の事前判断照合へ戻れる。
 
 </details>
-
-## 実装と資料
-
-SASRecの学習にはRecBole、再ランキングにはpymooのNSGA-IIを使用する。
-学習済みモデルの後段で推薦集合を選ぶ構成であり、SASRec自体をNSGA-IIで学習する方式ではない。
-
-- [結果の確認手順](v0/RUNBOOK.md)：現行の1M入口と保存集計の照合
-- [研究背景](research/research_state.md)と[先行研究](research/literature.md)：概念、主張の範囲、関連文献
-- [研究の進め方](research/README.md)：計画、報告、相談からの引き継ぎ
-
-現行の公開入口は[v0/reproduce/](v0/reproduce/)である。
-公開対象だけで小規模な境界検査と報告値照合ができる。フル再学習は未実施。
-`v0/experiment.py`は100K用の歴史的snapshotである。100Kの結果文書はGit historyに残す。
-
-この公開リポジトリにはコード、研究文書、集計結果の報告を収録する。
-データ、checkpoint、ユーザー単位の出力、相談履歴は含めない。
-報告内のrun IDと証拠ファイル名は別保存の記録を識別するもので、GitHubに出力を同梱したことを意味しない。
-
-MovieLensはGroupLens Research Projectのデータを使用する。
-出典：F. Maxwell Harper and Joseph A. Konstan (2015), *The MovieLens Datasets: History and Context*, [DOI](https://doi.org/10.1145/2827872)。
-公開時は[データ利用条件](v0/DATA_LICENSE.md)を確認し、データ、checkpoint、ユーザー単位の出力をこのREADMEと一緒に無条件で再配布しない。
 
 ## 参考文献
 
