@@ -31,6 +31,26 @@ NSGA-IIとWeighted SumのNDCG差の95%区間は0を跨ぎ、推薦品質上の�
 FAS-MOEAの再現や、人間が経験するserendipityの改善を示した結果ではない。
 条件、数値、証拠と検証範囲は[v0の正式baseline報告](v0/reports/S01-ml-1m-baseline.md)にまとめている。
 
+<a id="evidence"></a>
+## 判断から結果・コードを確認する
+
+| 評価からの判断 | 結果の根拠 | 実装・検証の入口 |
+| --- | --- | --- |
+| ジャンル距離の上昇だけで推薦品質の改善とは判断しない | [正式報告のTest結果](v0/reports/S01-ml-1m-baseline.md#test結果)：距離とNDCGが逆方向に変化 | [公開実装の指標計算](https://github.com/t3-sketch/serendipity-ga-multiobjective/blob/985bfc534c6dbaa53c835239fd45ae73f460d004/v0/reproduce/experiment.py#L387) |
+| NSGA-IIの複雑さを、加重和より良いという根拠なしに正当化しない | [保存bootstrap集計](v0/reproduce/expected/resumed2-test-paired-bootstrap.csv)：差の区間が0をまたぐ | [baselineの選択処理](https://github.com/t3-sketch/serendipity-ga-multiobjective/blob/985bfc534c6dbaa53c835239fd45ae73f460d004/v0/reproduce/experiment.py#L209)、[報告値の照合](https://github.com/t3-sketch/serendipity-ga-multiobjective/blob/985bfc534c6dbaa53c835239fd45ae73f460d004/v0/reproduce/verify_saved.py#L93) |
+| 人間の発見体験との対応は、別途検証する問いとして残す | [正式報告の研究上の解釈](v0/reports/S01-ml-1m-baseline.md#研究上の解釈) | [既存の判断記録](research/decisions.md)、[研究全体の計画](ROADMAP.md) |
+
+コードリンクは2026-09-14に照合した公開snapshotです。当時の実行コードとのバイト一致を保証するものではありません。
+
+### 確認済みと未検証の境界
+
+| 範囲 | 確認状況 |
+| --- | --- |
+| 保存集計と正式報告の一致 | 2026-09-13に照合済み。[検証範囲の記録](v0/reports/S01-ml-1m-baseline.md#証拠と検証範囲) |
+| 公開資料だけでできる確認 | [check.py](v0/reproduce/check.py)による小規模な境界検査と、[verify_saved.py](v0/reproduce/verify_saved.py)による公開集計・報告値の照合。手順は[再現の入口](v0/reproduce/) |
+| 公開snapshotからのフル再学習・本実験の再実行 | 未実施。データ・checkpoint・ユーザー別出力は同梱しない |
+| 複数学習seedでの安定性・人間評価との対応 | 未検証。代理指標の上昇をexperienced serendipityの改善とは呼ばない |
+
 ## 研究の見取り図
 
 | 研究テーマ | 現時点の到達点 |
@@ -66,77 +86,7 @@ MovieLensはGroupLens Research Projectのデータを使用する。
 
 ## 研究の記録
 
-<details>
-<summary>2026-09-12</summary>
-
-<br>
-
-#### 今日やったこと
-
-MovieLens 1Mの既知結果と保存済み成果物を照合し、v0の正式baselineを1Mへ一本化した。
-100K中心の結果文書は現行mainから外し、Git historyへ残した。
-
-#### 仮説
-
-新しい仮説なし。
-今回の作業は、採用済み結果と研究文書の不一致を解消する文書整理である。
-
-#### 実験
-
-新規実験なし。
-1M本比較とPhase 1診断の保存済み設定、完了状態、集計結果を確認した。
-
-Metrics:
-
-- [正式baseline報告](v0/reports/S01-ml-1m-baseline.md)に記録したNDCG@10とmean genre distanceを保存CSVと照合した。
-
-#### 分かったこと
-
-1Mではgenre distanceが高い再ランキング結果ほどNDCG@10が低く、NSGA-IIのWeighted Sumに対するNDCG上の優位性も確認できない。
-この結果はsystem-sideのtrade-offであり、experienced serendipityの改善を示さない。
-
-#### 問題
-
-公開コードは100K用であり、1M実験のコードと出力は別保存である。
-当時の事前仕様との対応と、コードと環境を復元した再現確認は未完である。
-
-#### Next
-
-M1の事前判断記録と1M実験条件を照合する。
-追加実験は、その照合後に必要性を判断する。
-
-</details>
-
-<details>
-<summary>2026-09-13</summary>
-
-<br>
-
-#### 今日やったこと
-
-1Mの別保存実装を特定し、公開snapshotを`v0/reproduce/`へ置いた。保存集計とS01報告値、H1の再現CSVを照合した。100Kコードを現行入口から外した。
-
-#### 仮説
-
-新しい仮説なし。公開対象だけで小規模確認と集計照合ができる状態を作る作業である。
-
-#### 実験
-
-フル再学習なし。`check.py`と`verify_saved.py`を実行する。H1の既存A0/A1結果を再現証拠として使う。
-
-#### 分かったこと
-
-S01の報告値は公開expected CSVと一致する。H1のSASRec行と7 epoch学習ログも一致する。公開`experiment.py`はresumed2記録hashともH1 harnessともバイト一致しない。
-
-#### 問題
-
-事前仕様との照合は未完。フル再学習は未実施。H1/sanityフォルダは未commitのまま選別だけした。
-
-#### Next
-
-AstraレビューのあとPhase 3。Phase 2の範囲ではM1の事前判断照合へ戻れる。
-
-</details>
+過去の日記は[2026-09-12](research/logs/2026-09-12.md)・[2026-09-13](research/logs/2026-09-13.md)に分けています。当時の状態を残した記録で、現行の結果・検証範囲は上記の正式報告を参照してください。
 
 ## 参考文献
 
