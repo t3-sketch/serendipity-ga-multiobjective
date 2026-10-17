@@ -1,5 +1,11 @@
 # Research / Engineering 引き継ぎ計画
 
+## Engineering SPARC S0〜S3 採用記録（2026-10-01）
+
+Engineering正本で、人工データに限定したSPARC試作のS0〜S3（独立モデル・RQ/6種lossの勾配検証、決定的検索、loopback HTTP、TypeScript adapter）を採用する。これはResearchの音楽データ選定・本学習・評価結果・人間評価を開始する計画ではなく、Research側で同じ推薦実装を作り直さず、後続のデータprotocolと比較設計へ渡すためのEngineering境界検証である。Engineeringの既存GenreJaccard baseline、mock、UI、FMA40デモ、0.1/0.2契約は保持し、S4以降の音楽接続、UI配線、0.3 reader、公開は今回の範囲に含めない。
+
+採用結果はEngineeringの `.codex/IMPLEMENTATION_STATE.md` と実行ログで確認し、S1〜S3の人工smoke成功を音楽推薦の品質やSPARC導入完了とは解釈しない。Research側の評価protocol、データ、報告値は変更しない。
+
 ## READMEの指標定義と参考文献の整理（2026-09-14）
 
 ユーザー指定の3文献をREADMEから削除し、今回のSerendipity代理指標とNDCGの数式を追記する文書更新。既存実装の正規化ジャンル、positive履歴平均、0.5×L1距離、二値NDCGの計算と照合した。実験条件・指標・研究判断自体の変更ではなく、既存定義の明文化である。
