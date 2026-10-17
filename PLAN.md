@@ -1,5 +1,9 @@
 # Research / Engineering 引き継ぎ計画
 
+## Engineering SPARC S4 採用記録（2026-10-16）
+
+Engineering正本で、SPARCのS4（Music4All-Onion v2の聴取履歴と `id_musicnn` 特徴量による学習と、MostPop・two-towerとの比較）を採用する。protocol・指標・採否基準は、Engineeringの `SPARC.md`「S4採用範囲と実験protocol」に結果を見る前に固定した。これはEngineering側のretrieval評価で、Researchの既存評価protocol・データ・報告値・人間評価は変更しない。S4の数値を、Sonderでの体験改善やLike予測の根拠とは解釈しない。
+
 ## Engineering SPARC S0〜S3 採用記録（2026-10-01）
 
 Engineering正本で、人工データに限定したSPARC試作のS0〜S3（独立モデル・RQ/6種lossの勾配検証、決定的検索、loopback HTTP、TypeScript adapter）を採用する。これはResearchの音楽データ選定・本学習・評価結果・人間評価を開始する計画ではなく、Research側で同じ推薦実装を作り直さず、後続のデータprotocolと比較設計へ渡すためのEngineering境界検証である。Engineeringの既存GenreJaccard baseline、mock、UI、FMA40デモ、0.1/0.2契約は保持し、S4以降の音楽接続、UI配線、0.3 reader、公開は今回の範囲に含めない。
