@@ -91,6 +91,12 @@ H1 A0は保存checkpoint再利用で下流7指標が差0.0、A1はscratch 7 epoc
 フル再学習と本実験の再実行は未実施。データ、checkpoint、個別ユーザー出力は同梱しない。
 手順は[RUNBOOK](../RUNBOOK.md)。H1とsanityの範囲は[S02](S02-h1-candidate-generators.md)、[S03](S03-sasrec-sanity-check.md)。
 
+2026-10-27（End-of-Day handoff）：公開checkoutの既存環境で`v0/reproduce/check.py`と`verify_saved.py`を再実行した。
+前者は履歴平均positive、時間リーク、候補カタログ、目的・front・repair・seed・held-out metricの境界検査にPASSした。
+後者はS01の手法×指標表とpaired bootstrap、およびH1の学習集計と公開expected CSVの一致にPASSした。
+MovieLens 1Mデータは公開checkoutに含めないため、配布データのSHA-256照合はSKIPである。
+学習、NSGA-II本実験、保存checkpointの実行、1M実データでのフル再現はこの確認に含まれない。
+
 ## 未検証事項
 
 - 当時の事前仕様と判断記録の対応。primary outcome、代表解規則、許容accuracy lossをいつ固定したかの照合。
